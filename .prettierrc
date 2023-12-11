@@ -1,0 +1,9 @@
+{
+    "tabWidth": 2,
+    "align": "auto",
+    "useTabs": false,
+    "trailingComma": "es5",
+    "semi": false,
+    "singleQuote": true,
+    "jsxBracketsSemiline": false
+  }
