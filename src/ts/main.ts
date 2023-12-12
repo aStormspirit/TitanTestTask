@@ -1,10 +1,10 @@
 import Plotly from 'plotly.js-dist'
-import { xValues, data, xDate, yValues, yHours } from './utils'
+import { xValues, xDate, yValues, data, getIndexInRange } from './utils'
 
 const chart = document.getElementById('chart')
 
 var layout = {
-  title: 'Скважина 1-1',
+  title: 'Ск',
 
   barmode: 'stack',
   xaxis: {
@@ -62,7 +62,7 @@ window.onresize = function () {
 }
 
 setPlan(100) // установить план добычи
-setValue(15, new Date(2020, 6, 15, 1, 0, 0).getTime())
+setValue(15, new Date(2020, 6, 15, 1, 1, 0).getTime())
 setValue(15, new Date(2020, 6, 15, 1, 15, 0).getTime())
 setValue(8, new Date(2020, 6, 15, 1, 20, 0).getTime())
 setValue(7, new Date(2020, 6, 15, 1, 40, 0).getTime())
@@ -75,30 +75,35 @@ setValue(15, new Date(2020, 6, 15, 5, 25, 0).getTime())
 setValue(8, new Date(2020, 6, 15, 6, 12, 0).getTime())
 setValue(7, new Date(2020, 6, 15, 7, 43, 0).getTime())
 
-function getIndexInRange(start: number, end: number) {
-  const iDate: number[] = []
+export const yHours: any = [] // значение добытого за час
 
-  xDate.forEach((d: any, i: number) => {
-    if (d >= start && d <= end) {
-      iDate.push(i)
-    }
-  })
-
-  return iDate
-}
-
-function sumValue() {
+function sumValue(Hour: number) {
   var sum = getIndexInRange(
-    new Date(2020, 6, 15, 1, 0, 0).getTime(),
-    new Date(2020, 6, 15, 2, 0, 0).getTime()
+    new Date(2020, 6, 15, Hour, 0, 0).getTime(),
+    new Date(2020, 6, 15, Hour, 59, 0).getTime()
   ).reduce(function (total, index) {
     return total + yValues[index]
   }, 0)
 
   yHours.push(sum)
-  updateChart()
 
   return sum
 }
 
-sumValue()
+function setHourValue() {
+  const trace2 = {
+    x: xValues,
+    y: yHours,
+    type: 'bar',
+  }
+
+  data.push(trace2)
+  updateChart()
+}
+for (let i = 0; i < 24; i++) {
+  sumValue(i)
+}
+
+setHourValue()
+
+console.log(data)
